@@ -1,0 +1,24 @@
+# Cài đặt thư viện trước (trong thực tế cần cài đúng SDK của Zama)
+# pip install concrete-numpy
+
+from concrete import fhe
+
+# Tạo hàm cộng FHE
+@fhe.compiler({"x": "encrypted", "y": "encrypted"})
+def add_encrypted(x, y):
+    return x + y
+
+# Biên dịch function
+circuit = add_encrypted.compile()
+
+# Mã hoá dữ liệu đầu vào
+encrypted_x = circuit.encrypt(7)
+encrypted_y = circuit.encrypt(5)
+
+# Tính toán trên dữ liệu đã mã hoá
+encrypted_result = circuit.run(encrypted_x, encrypted_y)
+
+# Giải mã kết quả
+result = circuit.decrypt(encrypted_result)
+
+print("Kết quả (được tính toán trên dữ liệu mã hoá):", result)

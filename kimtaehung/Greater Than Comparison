@@ -1,0 +1,23 @@
+# pip install concrete-numpy
+
+from concrete import fhe
+
+# Hàm so sánh: kiểm tra x > threshold
+@fhe.compiler({"x": "encrypted"})
+def greater_than_threshold(x):
+    threshold = 10
+    return x > threshold
+
+# Biên dịch function
+circuit = greater_than_threshold.compile()
+
+# Mã hoá dữ liệu đầu vào
+encrypted_x = circuit.encrypt(15)
+
+# Thực hiện tính toán trên ciphertext
+encrypted_result = circuit.run(encrypted_x)
+
+# Giải mã kết quả
+result = circuit.decrypt(encrypted_result)
+
+print(f"Giá trị lớn hơn 10?: {bool(result)}")

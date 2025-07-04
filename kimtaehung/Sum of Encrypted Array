@@ -1,0 +1,26 @@
+# pip install concrete-numpy
+
+from concrete import fhe
+
+# Hàm tính tổng mảng
+@fhe.compiler({"arr": "encrypted"})
+def sum_encrypted_array(arr):
+    total = 0
+    for x in arr:
+        total += x
+    return total
+
+# Biên dịch function
+circuit = sum_encrypted_array.compile()
+
+# Mã hoá dữ liệu đầu vào (ví dụ: mảng có 3 phần tử)
+data = [5, 10, 15]
+encrypted_arr = circuit.encrypt(data)
+
+# Thực hiện tính toán trên ciphertext
+encrypted_result = circuit.run(encrypted_arr)
+
+# Giải mã kết quả
+result = circuit.decrypt(encrypted_result)
+
+print(f"Tổng của mảng {data} (tính trên dữ liệu mã hoá): {result}")

@@ -1,0 +1,23 @@
+# pip install concrete-numpy
+
+from concrete import fhe
+
+# Tạo hàm XOR FHE
+@fhe.compiler({"a": "encrypted", "b": "encrypted"})
+def xor_encrypted(a, b):
+    return a ^ b  # XOR bitwise
+
+# Biên dịch function
+circuit = xor_encrypted.compile()
+
+# Mã hoá dữ liệu đầu vào
+encrypted_a = circuit.encrypt(1)  # bit 1
+encrypted_b = circuit.encrypt(0)  # bit 0
+
+# Thực hiện tính toán trên ciphertext
+encrypted_result = circuit.run(encrypted_a, encrypted_b)
+
+# Giải mã kết quả
+result = circuit.decrypt(encrypted_result)
+
+print(f"Kết quả XOR (1 ^ 0) trên dữ liệu mã hoá: {result}")
